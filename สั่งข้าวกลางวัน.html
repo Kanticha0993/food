@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="th"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>สั่งข้าวกลางวัน</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#faf7f2;--card:#fff;--tx:#2b2620;--mut:#7a7166;--pri:#e8590c;--prit:#fff;--bd:#e6dfd4;--ok:#2f9e44;--okbg:#e6f6ea;--bad:#c92a2a;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#1c1915;--card:#27231e;--tx:#f1ebe2;--mut:#a39a8d;--pri:#ff8a4c;--prit:#1c1915;--bd:#3a342c;--ok:#69db7c;--okbg:#22331f;--bad:#ff8787;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#1c1915;--card:#27231e;--tx:#f1ebe2;--mut:#a39a8d;--pri:#ff8a4c;--prit:#1c1915;--bd:#3a342c;--ok:#69db7c;--okbg:#22331f;--bad:#ff8787;color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.5 "Noto Sans Thai",system-ui,sans-serif}
+main{max-width:760px;margin:0 auto;padding:12px 14px 80px}
+h1{font-size:20px;margin:6px 0 2px}h3{margin:0 0 8px;font-size:15px}
+.mut{color:var(--mut);font-size:13px}
+.tabs{display:flex;gap:6px;overflow-x:auto;margin:10px 0;padding-bottom:4px}
+.tabs button{flex:0 0 auto;border:1px solid var(--bd);background:var(--card);color:var(--tx);padding:8px 14px;border-radius:99px;font:inherit;cursor:pointer}
+.tabs button.on{background:var(--pri);color:var(--prit);border-color:var(--pri);font-weight:600}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:14px;margin:10px 0}
+.card.ok{background:var(--okbg);border-color:var(--ok)}
+.bn{padding:10px 14px;border-radius:12px;font-weight:600;margin:8px 0}
+.bn.o{background:var(--okbg);color:var(--ok)}.bn.c{background:var(--bd);color:var(--bad)}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+@media(max-width:480px){.grid{grid-template-columns:1fr}}
+label{font-size:13px;color:var(--mut);display:block}
+input,select,textarea{width:100%;font:inherit;color:var(--tx);background:var(--bg);border:1px solid var(--bd);border-radius:10px;padding:9px 10px}
+textarea{min-height:90px}
+.menu{display:grid;gap:8px}
+.item{text-align:left;font:inherit;color:var(--tx);background:var(--bg);border:2px solid var(--bd);border-radius:12px;padding:10px 12px;cursor:pointer}
+.item.sel{border-color:var(--pri);background:var(--card)}
+.item b{display:block}
+.btn{background:var(--pri);color:var(--prit);border:0;border-radius:12px;padding:12px 16px;font:inherit;font-weight:700;width:100%;cursor:pointer;margin-top:10px}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn.s{width:auto;padding:8px 14px;margin:0}
+.lnk{background:none;border:0;color:var(--bad);font:inherit;cursor:pointer;text-decoration:underline}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}
+.chip{background:var(--bg);border:1px solid var(--bd);border-radius:99px;padding:3px 10px;font-size:13px}
+.big{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px dashed var(--bd);font-size:17px}
+.big b{font-size:24px;color:var(--pri)}
+.row{display:flex;justify-content:space-between;gap:8px;padding:6px 0;border-bottom:1px solid var(--bd)}
+.stars button{font-size:30px;background:none;border:0;cursor:pointer;color:var(--bd);padding:0 2px}
+.stars button.on{color:#f59f00}
+#toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--tx);color:var(--bg);padding:10px 16px;border-radius:99px;display:none;z-index:9}
+@media print{.tabs,.noprint,#toast{display:none!important}body{background:#fff;color:#000}.card{border-color:#999}}
+.rd{display:flex;gap:6px;margin-top:8px}.rd .item{flex:1;text-align:center;padding:6px;font-size:13px}.item:disabled{opacity:.45;cursor:not-allowed}.notice{white-space:pre-line}
+.kpi{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}.kpi div{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:10px}.kpi b{display:block;font-size:22px;color:var(--pri)}
+.drow{border-bottom:1px solid var(--bd);padding:10px 0}.drow:last-child{border:0}.dl{display:flex!important;align-items:center;gap:10px;font-size:15px!important;color:var(--tx)!important}.dl input{width:22px;height:22px;padding:0;flex:0 0 auto}.sel2{display:grid;grid-template-columns:1.4fr 1fr;gap:6px;margin:8px 0 0 32px}.drow.on .dl b{color:var(--pri)}
+</style></head><body>
+<main><h1>🍱 สั่งข้าวกลางวัน</h1><div id="app"></div></main><div id="toast"></div>
+<script>
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const DEF={week:'',notice:'',openTime:'07:00',cutoff:'09:20',menu:[],teams:[],rounds:['รอบ 1 (รับ 11.00 น.)','รอบ 2 (รับ 16.00 น.)']};
+const S={cfg:DEF,orders:[],fb:[],tab:'order',db:null,uid:'local',admin:false,err:'',pending:false,adm:null,roles:{},active:null,myReq:'',members:[],replies:[],rp:{},fbFilter:'',day:'',unsub:null,rk:'',
+ draft:{days:{},note:null,rating:0,fbItem:'',fbText:'',anon:false},me:{name:'',team:''},rep:{team:'',pn:'',pitem:'',pround:'r0',pnote:''}};
+try{Object.assign(S.me,JSON.parse(localStorage.getItem('me')||'{}'))}catch(e){}
+const saveMe=()=>{try{localStorage.setItem('me',JSON.stringify(S.me))}catch(e){}};
+function bkk(){const p={};new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Bangkok',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).formatToParts(new Date()).forEach(x=>p[x.type]=x.value);return{date:p.year+'-'+p.month+'-'+p.day,hm:p.hour+':'+p.minute}}
+const addDays=(d,n)=>{const x=new Date(d+'T00:00:00Z');x.setUTCDate(x.getUTCDate()+n);return x.toISOString().slice(0,10)};
+function weekStart(){if(S.cfg.week)return S.cfg.week;const t=bkk().date,w=new Date(t+'T00:00:00Z').getUTCDay();return w===0?addDays(t,1):w===6?addDays(t,2):addDays(t,1-w)}
+const days=()=>[0,1,2,3,4].map(i=>addDays(weekStart(),i));
+const dayLabel=d=>new Date(d+'T00:00:00Z').toLocaleDateString('th-TH',{timeZone:'UTC',weekday:'long',day:'numeric',month:'short'});
+const R=()=>S.cfg.rounds.map((l,i)=>({id:'r'+i,label:l}));
+function editable(d){const t=bkk();return d>t.date||(d===t.date&&t.hm>=S.cfg.openTime&&t.hm<S.cfg.cutoff)}
+function toast(t){const e=document.getElementById('toast');e.textContent=t;e.style.display='block';clearTimeout(toast.t);toast.t=setTimeout(()=>e.style.display='none',2600)}
+const lines=t=>String(t||'').split('\n').map(x=>x.trim()).filter(Boolean);
+const uniq=a=>[...new Set(a.filter(Boolean))];
+async function put(id,data){try{await S.db.doc('orders/'+id).set(data);return true}catch(e){toast('บันทึกไม่สำเร็จ: '+(e.message||e.code));return false}}
+async function del(id){try{await S.db.doc('orders/'+id).delete()}catch(e){toast('ลบไม่สำเร็จ')}}
+function banner(){const t=bkk(),c=S.cfg;if(!days().includes(t.date))return '';
+ if(t.hm<c.openTime)return '<div class="bn c">ยังไม่เปิดรับของวันนี้ (เปิด '+esc(c.openTime)+' น.)</div>';
+ if(t.hm>=c.cutoff)return '<div class="bn c">⛔ ปิดรับออเดอร์ของวันนี้แล้ว (ปิด '+esc(c.cutoff)+' น.)</div>';
+ const[h,m]=c.cutoff.split(':').map(Number),[a,b]=t.hm.split(':').map(Number);
+ return '<div class="bn o">✅ วันนี้รับออเดอร์ถึง '+esc(c.cutoff)+' น. (เหลือ '+(h*60+m-a*60-b)+' นาที)</div>'}
+const dl=(id,a)=>'<datalist id="'+id+'">'+a.map(x=>'<option value="'+esc(x)+'">').join('')+'</datalist>';
+const notice=()=>S.cfg.notice?'<div class="card notice">'+esc(S.cfg.notice)+'</div>':'';
+const menuOpts=sel=>S.cfg.menu.map(m=>'<option value="'+esc(m.id)+'"'+(m.id===sel?' selected':'')+'>'+esc(m.name)+'</option>').join('');
+const roundOpts=sel=>R().map(r=>'<option value="'+r.id+'"'+(r.id===sel?' selected':'')+'>'+esc(r.label)+'</option>').join('');
+const mine=d=>S.orders.find(o=>o.id===d+'_'+S.uid);
+
+function dd(d){const x=S.draft.days[d];if(x)return x;const o=mine(d);return o?{item:o.itemId,round:o.roundId}:{item:'',round:'r0'}}
+function setD(d,k,v){S.draft.days[d]=Object.assign({},dd(d),{[k]:v});render(1)}
+function tickD(d,on){const o=days().map(dd).find(y=>y.item),x=dd(d);S.draft.days[d]=Object.assign({},x,{item:on?(o?o.item:S.cfg.menu[0].id):'',round:o?o.round:x.round})}
+function tickAll(on){days().filter(editable).forEach(d=>tickD(d,on));render(1)}
+function noteVal(){if(S.draft.note!==null)return S.draft.note;const o=days().map(mine).find(Boolean);return o?o.note||'':''}
+function vOrder(){const c=S.cfg,m=S.me;
+ return notice()+banner()+'<div class="card"><h3>ข้อมูลของคุณ</h3><div class="grid">'+
+ '<div><label>ชื่อเล่น *</label><input value="'+esc(m.name)+'" oninput="S.me.name=this.value;saveMe()"></div>'+
+ '<div><label>ทีม *</label><input list="dlt" value="'+esc(m.team)+'" onchange="S.me.team=this.value;saveMe()" placeholder="เลือกหรือพิมพ์"></div></div>'+dl('dlt',c.teams)+'</div>'+
+ (c.menu.length?'<div class="card"><h3>ติ๊กวันที่ต้องการสั่ง</h3><div class="mut">ติ๊กวัน แล้วเลือกเมนูและรอบรับอาหาร · เลือกแล้ว <b>'+days().filter(d=>dd(d).item).length+'</b> วัน</div>'+
+  '<div style="display:flex;gap:6px;margin:8px 0"><button class="btn s" onclick="tickAll(true)">ติ๊กทุกวันที่เหลือ</button><button class="btn s" style="background:var(--bd);color:var(--tx)" onclick="tickAll(false)">ล้าง</button></div>'+
+  days().map(d=>{const ed=editable(d),x=dd(d),on=!!x.item;
+   return '<div class="drow'+(on?' on':'')+'"><label class="dl"><input type="checkbox" '+(on?'checked ':'')+(ed?'':'disabled ')+'onchange="tickD(\''+d+'\',this.checked);render(1)"><b>'+dayLabel(d)+'</b>'+(ed?'':'<span class="mut">ปิดรับ</span>')+'</label>'+
+   (on?'<div class="sel2"><select '+(ed?'':'disabled')+' onchange="setD(\''+d+'\',\'item\',this.value)">'+menuOpts(x.item)+'</select><select '+(ed?'':'disabled')+' onchange="setD(\''+d+'\',\'round\',this.value)">'+roundOpts(x.round)+'</select></div>':'')+'</div>'}).join('')+'</div>'+
+  '<div class="card"><label>หมายเหตุ (เช่น ไม่เผ็ด, ไม่ใส่ผัก, แพ้อาหาร) — ใช้กับทุกวันที่สั่ง</label><input value="'+esc(noteVal())+'" oninput="S.draft.note=this.value"><button class="btn" '+(S.db?'':'disabled')+' onclick="submitAll()">บันทึกออเดอร์</button></div>'
+  :'<div class="card mut">ยังไม่มีเมนูสัปดาห์นี้ — แอดมินตั้งเมนูที่แท็บ “ตั้งค่า”</div>')}
+async function submitAll(){const m=S.me,c=S.cfg;if(!m.name.trim()||!m.team.trim())return toast('กรอกชื่อเล่นและทีม');let ok=true,n=0;
+ for(const d of days()){if(!editable(d))continue;const x=dd(d),id=d+'_'+S.uid,ex=mine(d),it=c.menu.find(i=>i.id===x.item);
+  if(it){const r=R().find(r=>r.id===x.round)||R()[0]||{id:'r0',label:''};n++;
+   if(!await put(id,{date:d,uid:S.uid,by:S.uid,name:m.name.trim(),team:m.team.trim(),itemId:it.id,itemName:it.name,roundId:r.id,roundLabel:r.label,note:noteVal().trim(),ts:Date.now()}))ok=false}
+  else if(ex)await del(id)}
+ if(ok){upsert();S.draft.days={};S.draft.note=null;toast('บันทึกแล้ว ✅ ('+n+' วัน)');render(1)}}
+
+function daySel(){if(!days().includes(S.day)){const t=bkk().date;S.day=days().includes(t)?t:days()[0]}
+ return '<select onchange="S.day=this.value;render(1)">'+days().map(d=>'<option value="'+d+'"'+(d===S.day?' selected':'')+'>'+dayLabel(d)+'</option>').join('')+'</select>'}
+const dayOrders=()=>S.orders.filter(o=>o.date===S.day);
+function cnt(os,k){const c={};os.forEach(o=>c[o[k]]=(c[o[k]]||0)+1);return c}
+function vTeam(){const r=S.rep;if(!r.team&&S.me.team&&!S.repInit){r.team=S.me.team;S.repInit=1}
+ const ds=daySel(),os=dayOrders().filter(o=>!r.team||o.team===r.team),ci=cnt(os,'itemName'),ed=editable(S.day);
+ return notice()+banner()+'<div class="card"><h3>สรุปออเดอร์ของทีม</h3><div class="grid">'+ds+
+ '<select onchange="S.rep.team=this.value;render(1)"><option value="">ทุกทีม</option>'+uniq([...S.cfg.teams,...S.orders.map(o=>o.team)]).map(t=>'<option'+(t===r.team?' selected':'')+'>'+esc(t)+'</option>').join('')+'</select></div>'+
+ '<div class="chips">'+(Object.keys(ci).map(k=>'<span class="chip">'+esc(k)+' × <b>'+ci[k]+'</b></span>').join('')||'<span class="mut">ยังไม่มีออเดอร์</span>')+'</div>'+
+ os.map(o=>'<div class="row"><div><b>'+esc(o.name)+'</b> · '+esc(o.itemName)+' <span class="mut">('+esc(o.roundLabel)+')</span>'+(o.note?'<div class="mut">'+esc(o.note)+'</div>':'')+'</div>'+((S.admin||o.by===S.uid)&&ed?'<button class="lnk" data-id="'+esc(o.id)+'" onclick="del(this.dataset.id)">ลบ</button>':'')+'</div>').join('')+
+ '<div class="mut" style="margin-top:8px">รวม '+os.length+' จาน</div><button class="btn s" style="margin-top:8px" onclick="copySum()">คัดลอกสรุป</button></div>'+
+ missing()+'<div class="card"><h3>สั่งแทนเพื่อนในทีม (วันที่เลือกด้านบน)</h3><div class="grid"><input placeholder="ชื่อเล่นเพื่อน" value="'+esc(r.pn)+'" oninput="S.rep.pn=this.value"><select onchange="S.rep.pitem=this.value"><option value="">เลือกเมนู</option>'+menuOpts(r.pitem)+'</select></div>'+
+ '<div class="grid" style="margin-top:8px"><select onchange="S.rep.pround=this.value">'+roundOpts(r.pround)+'</select><input placeholder="หมายเหตุ" value="'+esc(r.pnote)+'" oninput="S.rep.pnote=this.value"></div>'+
+ '<button class="btn" '+(ed&&S.db?'':'disabled')+' onclick="proxy()">เพิ่มออเดอร์</button></div>'}
+async function proxy(){const r=S.rep,it=S.cfg.menu.find(x=>x.id===r.pitem),rd=R().find(x=>x.id===r.pround);
+ if(!r.pn.trim()||!it||!r.team)return toast('เลือกทีม ใส่ชื่อ และเลือกเมนู');if(!editable(S.day))return toast('วันนี้ปิดรับแล้ว');
+ if(await put(S.day+'_p'+Date.now().toString(36),{date:S.day,uid:'',by:S.uid,name:r.pn.trim(),team:r.team,itemId:it.id,itemName:it.name,roundId:rd.id,roundLabel:rd.label,note:r.pnote.trim(),ts:Date.now()})){r.pn='';r.pnote='';toast('เพิ่มแล้ว ✅');render(1)}}
+function copySum(){const r=S.rep,os=dayOrders().filter(o=>!r.team||o.team===r.team),c=cnt(os,'itemName');
+ const t=(r.team||'ทุกทีม')+' · '+dayLabel(S.day)+'\n'+Object.keys(c).map(k=>k+' x'+c[k]).join('\n')+'\nรวม '+os.length+' จาน';
+ try{navigator.clipboard.writeText(t).then(()=>toast('คัดลอกแล้ว'),()=>toast('คัดลอกไม่ได้'))}catch(e){toast('คัดลอกไม่ได้')}}
+
+function vKitchen(){const os=dayOrders(),rs=uniq(R().map(r=>r.label).concat(os.map(o=>o.roundLabel)));
+ return banner()+'<div class="card noprint"><div class="grid">'+daySel()+'<button class="btn s" onclick="print()">พิมพ์ใบสั่งครัว</button></div></div>'+
+ '<div class="card"><h3>ออเดอร์เข้าครัว · '+dayLabel(S.day)+' · รวม '+os.length+' จาน</h3></div>'+
+ rs.map(rl=>{const o2=os.filter(o=>o.roundLabel===rl);if(!o2.length)return '';const t=cnt(o2,'itemName'),tm={};
+  o2.forEach(o=>{const g=tm[o.team]=tm[o.team]||{c:{},n:[]};g.c[o.itemName]=(g.c[o.itemName]||0)+1;if(o.note)g.n.push(o.name+': '+o.note)});
+  return '<div class="card"><h3>'+esc(rl)+' · '+o2.length+' จาน</h3>'+Object.keys(t).map(k=>'<div class="big"><span>'+esc(k)+'</span><b>'+t[k]+'</b></div>').join('')+
+  '<div style="margin-top:10px"></div>'+Object.keys(tm).map(k=>'<div class="row"><div><b>'+esc(k)+'</b>'+tm[k].n.map(x=>'<div class="mut">⚠ '+esc(x)+'</div>').join('')+'</div><div style="text-align:right">'+Object.keys(tm[k].c).map(i=>esc(i)+' × '+tm[k].c[i]).join('<br>')+'</div></div>').join('')+'</div>'}).join('')}
+
+const ROLE={employee:'พนักงาน',rep:'ตัวแทนทีม',kitchen:'ครัว',admin:'แอดมิน'};
+const baseRole=()=>S.admin?'admin':(S.roles[S.uid]||'employee');
+const allowed=()=>{const b=baseRole();return b==='admin'?['employee','rep','kitchen','admin']:b==='employee'?['employee']:['employee',b]};
+function role(){return S.active&&allowed().includes(S.active)?S.active:baseRole()}
+function upsert(){if(!S.db||S.uid==='local'||!S.me.name.trim())return;S.db.doc('members/'+S.uid).set({uid:S.uid,name:S.me.name.trim(),team:S.me.team.trim(),req:S.myReq||'',ts:Date.now()}).catch(()=>{})}
+const stars=n=>'★'.repeat(n)+'☆'.repeat(5-n);
+function missing(){const r=S.rep,have=new Set(dayOrders().map(o=>o.uid)),ms=S.members.filter(m=>(!r.team||m.team===r.team)&&!have.has(m.uid));
+ return '<div class="card"><h3>ยังไม่ได้สั่ง ('+ms.length+')</h3><div class="chips">'+(ms.map(m=>'<span class="chip">'+esc(m.name)+'</span>').join('')||'<span class="mut">ครบแล้ว 🎉</span>')+'</div></div>'}
+function vFb(){const r=role(),d=S.draft,staff=r==='kitchen'||r==='admin';
+ const form=r==='kitchen'?'':'<div class="card"><h3>ให้คะแนนอาหาร</h3><label>เมนู</label><select onchange="S.draft.fbItem=this.value"><option value="">เลือกเมนู</option>'+menuOpts(d.fbItem)+'</select>'+
+ '<div class="stars" style="margin:8px 0">'+[1,2,3,4,5].map(n=>'<button class="'+(d.rating>=n?'on':'')+'" onclick="S.draft.rating='+n+';render(1)">★</button>').join('')+'</div>'+
+ '<label>ความเห็น (รสชาติ ปริมาณ ความสะอาด ฯลฯ)</label><textarea oninput="S.draft.fbText=this.value">'+esc(d.fbText)+'</textarea>'+
+ '<label style="margin-top:6px"><input type="checkbox" style="width:auto" '+(d.anon?'checked':'')+' onchange="S.draft.anon=this.checked"> ส่งแบบไม่ระบุชื่อ (ครัวและแอดมินจะไม่เห็นชื่อ)</label>'+
+ '<button class="btn" '+(S.db?'':'disabled')+' onclick="sendFb()">ส่งฟีดแบ็ก</button></div>';
+ const list=S.fb.filter(f=>(staff||f.uid===S.uid)&&(!S.fbFilter||f.itemName===S.fbFilter));
+ return form+'<div class="card"><h3>'+(staff?'ฟีดแบ็กทั้งหมด':'ฟีดแบ็กของฉัน')+'</h3>'+(staff?'<select onchange="S.fbFilter=this.value;render(1)"><option value="">ทุกเมนู</option>'+uniq(S.fb.map(f=>f.itemName)).map(k=>'<option'+(k===S.fbFilter?' selected':'')+'>'+esc(k)+'</option>').join('')+'</select>':'')+(list.slice(0,60).map(fbItem).join('')||'<div class="mut">ยังไม่มีฟีดแบ็ก</div>')+'</div>'}
+function fbItem(f){const reps=S.replies.filter(x=>x.fbId===f.id).sort((a,b)=>a.ts-b.ts);
+ return '<div class="row" style="display:block"><div><b>'+esc(f.itemName)+'</b> <span style="color:#f59f00">'+stars(f.rating)+'</span> <span class="mut">'+esc(f.date)+' · '+esc(f.name||'ไม่ระบุชื่อ')+(f.team?' ('+esc(f.team)+')':'')+'</span>'+(S.admin?' <button class="lnk" data-id="'+esc(f.id)+'" onclick="delFb(this.dataset.id)">ลบ</button>':'')+'</div>'+(f.text?'<div>'+esc(f.text)+'</div>':'')+
+ reps.map(x=>'<div class="mut" style="margin:4px 0 0 12px">↳ <b>'+esc(x.name)+'</b> ('+ROLE[x.role]+'): '+esc(x.text)+'</div>').join('')+
+ '<div style="display:flex;gap:6px;margin-top:6px"><input placeholder="คอมเมนต์ / ตอบกลับ" value="'+esc(S.rp[f.id]||'')+'" oninput="S.rp[this.dataset.id]=this.value" data-id="'+esc(f.id)+'"><button class="btn s" data-id="'+esc(f.id)+'" onclick="sendReply(this.dataset.id)">ส่ง</button></div></div>'}
+async function sendFb(){const d=S.draft,it=S.cfg.menu.find(x=>x.id===d.fbItem);if(!it||!d.rating)return toast('เลือกเมนูและให้ดาว');
+ try{await S.db.collection('feedback').add({date:bkk().date,uid:S.uid,name:d.anon?'':(S.me.name||''),team:d.anon?'':(S.me.team||''),itemName:it.name,rating:d.rating,text:d.fbText.trim(),ts:Date.now()});d.rating=0;d.fbText='';d.fbItem='';toast('ขอบคุณสำหรับฟีดแบ็ก 🙏');render(1)}catch(e){toast('ส่งไม่สำเร็จ')}}
+async function sendReply(id){const t=(S.rp[id]||'').trim();if(!t)return;
+ try{await S.db.collection('replies').add({fbId:id,uid:S.uid,name:S.me.name||ROLE[role()],role:role(),text:t,ts:Date.now()});S.rp[id]='';render(1)}catch(e){toast('ส่งไม่สำเร็จ')}}
+async function delFb(id){if(S.admin&&confirm('ลบฟีดแบ็กนี้?'))try{await S.db.doc('feedback/'+id).delete()}catch(e){toast('ลบไม่ได้')}}
+
+function bar(l,n,max,x){return '<div class="row" style="align-items:center"><span style="flex:0 0 36%">'+l+'</span><div style="flex:1;background:var(--bd);border-radius:6px;height:14px"><div style="width:'+(max?Math.round(n/max*100):0)+'%;background:var(--pri);height:100%;border-radius:6px"></div></div><b style="min-width:62px;text-align:right">'+n+(x||'')+'</b></div>'}
+const avg=a=>a.length?+(a.reduce((x,y)=>x+y,0)/a.length).toFixed(1):0;
+function vDash(){const t=bkk().date,os=S.orders,fb=S.fb,td=os.filter(o=>o.date===t),pd=days().map(d=>os.filter(o=>o.date===d).length),pi=cnt(os,'itemName'),pt=cnt(os,'team');
+ const ordered=new Set(td.map(o=>o.uid)),items=uniq(Object.keys(pi).concat(fb.map(f=>f.itemName))),mx=a=>Math.max(1,...a);
+ return '<div class="kpi" style="margin:10px 0"><div><span class="mut">จานทั้งสัปดาห์</span><b>'+os.length+'</b></div><div><span class="mut">สั่งวันนี้</span><b>'+td.length+'</b></div><div><span class="mut">สมาชิกที่สั่งวันนี้</span><b>'+S.members.filter(m=>ordered.has(m.uid)).length+'/'+S.members.length+'</b></div><div><span class="mut">คะแนนเฉลี่ย ('+fb.length+' ความเห็น)</span><b>'+(fb.length?avg(fb.map(f=>f.rating)):'-')+'</b></div></div>'+
+ '<div class="card"><h3>ออเดอร์รายวัน</h3>'+days().map((d,i)=>bar(dayLabel(d),pd[i],mx(pd))).join('')+'</div>'+
+ '<div class="card"><h3>ยอดสั่งต่อเมนู (สัปดาห์นี้)</h3>'+(Object.keys(pi).map(k=>bar(esc(k),pi[k],mx(Object.values(pi)))).join('')||'<div class="mut">ยังไม่มี</div>')+'</div>'+
+ '<div class="card"><h3>ยอดสั่งต่อทีม</h3>'+(Object.keys(pt).map(k=>bar(esc(k),pt[k],mx(Object.values(pt)))).join('')||'<div class="mut">ยังไม่มี</div>')+'</div>'+
+ '<div class="card"><h3>คะแนนฟีดแบ็กต่อเมนู</h3>'+(items.map(k=>{const x=fb.filter(f=>f.itemName===k).map(f=>f.rating);return bar(esc(k),avg(x),5,' ★ ('+x.length+')')}).join('')||'<div class="mut">ยังไม่มีฟีดแบ็ก</div>')+
+ '<h3 style="margin-top:12px">การกระจายคะแนน</h3>'+[5,4,3,2,1].map(n=>{const c=fb.filter(f=>f.rating===n).length;return bar(n+' ★',c,mx(fb.map(()=>1).length?[fb.length]:[1]))}).join('')+'</div>'+
+ '<div class="card"><h3>⚠ ฟีดแบ็กคะแนนต่ำ (≤2 ดาว)</h3>'+(fb.filter(f=>f.rating<=2).slice(0,8).map(f=>'<div class="row" style="display:block"><b>'+esc(f.itemName)+'</b> '+stars(f.rating)+' <span class="mut">'+esc(f.date)+'</span><div>'+esc(f.text||'-')+'</div></div>').join('')||'<div class="mut">ไม่มี 👍</div>')+'</div>'+
+ '<div class="card"><h3>ส่งออกข้อมูล (CSV)</h3><div class="grid"><button class="btn s" onclick="exportCsv(\'o\')">ออเดอร์สัปดาห์นี้</button><button class="btn s" onclick="exportCsv(\'f\')">ฟีดแบ็กทั้งหมด</button></div></div>'}
+const cell=c=>{c=String(c==null?'':c);if(/^[=+\-@]/.test(c))c="'"+c;return '"'+c.replace(/"/g,'""')+'"'};
+async function exportCsv(k){const o=k==='o',rows=o?[['วันที่','ชื่อ','ทีม','เมนู','รอบ','หมายเหตุ']].concat(S.orders.slice().sort((a,b)=>a.date.localeCompare(b.date)).map(x=>[x.date,x.name,x.team,x.itemName,x.roundLabel,x.note])):[['วันที่','เมนู','ดาว','ชื่อ','ทีม','ความเห็น']].concat(S.fb.map(f=>[f.date,f.itemName,f.rating,f.name,f.team,f.text]));
+ try{const d=await claude.use('downloads');if(!d)return toast('ดาวน์โหลดไม่ได้ในมุมมองนี้');await d.save({filename:(o?'orders-':'feedback-')+bkk().date+'.csv',data:'\ufeff'+rows.map(r=>r.map(cell).join(',')).join('\n')})}catch(e){toast('ดาวน์โหลดไม่สำเร็จ')}}
+
+function vAdmin(){const a=S.adm;if(!a)return '<div class="mut">กำลังโหลด…</div>';
+ const ta=(k,l,h)=>'<label style="margin-top:8px">'+l+'</label><textarea oninput="S.adm.'+k+'=this.value" placeholder="'+h+'">'+esc(a[k])+'</textarea>';
+ const ms=S.members.slice().sort((x,y)=>(x.name||'').localeCompare(y.name||'','th'));
+ return '<div class="card"><h3>ตั้งค่าเมนูและระบบ</h3><div class="grid"><div><label>วันจันทร์ของสัปดาห์</label><input type="date" value="'+esc(a.week||weekStart())+'" onchange="S.adm.week=this.value"></div><div><label>&nbsp;</label><button class="btn s" style="width:100%" onclick="S.adm.week=addDays(a_w(),7);render(1)">+ สัปดาห์ถัดไป</button></div>'+
+ '<div><label>เปิดรับของวันนั้น</label><input type="time" value="'+esc(a.openTime)+'" oninput="S.adm.openTime=this.value"></div><div><label>ปิดรับ / ส่งครัว</label><input type="time" value="'+esc(a.cutoff)+'" oninput="S.adm.cutoff=this.value"></div></div>'+
+ ta('notice','ข้อความประกาศ','รบกวนสั่งก่อน 09.20 น. ...')+ta('menu','เมนูสัปดาห์นี้ (บรรทัดละ 1 เมนู)','ขนมจีน+น้ำยาไก่\nข้าวกระเพราหมูสับ+ไข่ดาว')+ta('teams','ทีม (บรรทัดละ 1)','Team พี่ผึ้ง\nTeam พี่ต้าร์')+ta('rounds','รอบรับอาหาร (บรรทัดละ 1)','')+
+ '<button class="btn" onclick="saveCfg()">บันทึก</button></div>'+
+ '<div class="card"><h3>สมาชิกและบทบาท</h3><div class="mut">สมาชิกจะปรากฏหลังบันทึกออเดอร์ครั้งแรก · แอดมิน = คนที่ได้สิทธิ์ Editor ของหน้านี้ (ตั้งที่เมนูแชร์)</div>'+
+ (ms.map(m=>'<div class="row" style="align-items:center"><div><b>'+esc(m.name)+'</b><div class="mut">'+esc(m.team)+'</div>'+(m.req&&m.req!==(S.roles[m.uid]||'employee')?'<div style="color:var(--pri)">ขอสิทธิ์: '+ROLE[m.req]+' <button class="lnk" style="color:var(--ok)" data-id="'+esc(m.uid)+'" data-r="'+m.req+'" onclick="setRole(this.dataset.id,this.dataset.r)">อนุมัติ</button></div>':'')+'</div><select style="width:auto" data-id="'+esc(m.uid)+'" onchange="setRole(this.dataset.id,this.value)">'+['employee','rep','kitchen'].map(k=>'<option value="'+k+'"'+((S.roles[m.uid]||'employee')===k?' selected':'')+'>'+ROLE[k]+'</option>').join('')+'</select></div>').join('')||'<div class="mut" style="margin-top:8px">ยังไม่มีสมาชิก</div>')+'</div>'}
+const a_w=()=>S.adm.week||weekStart();
+async function setRole(id,r){try{await S.db.doc('roles/'+id).set({role:r});toast('อัปเดตบทบาทแล้ว')}catch(e){toast('ตั้งบทบาทไม่ได้')}}
+async function saveCfg(){const a=S.adm,menu=lines(a.menu).map((n,i)=>({id:'m'+i,name:n}));
+ try{await S.db.doc('config/main').set({week:a.week||'',notice:a.notice.trim(),openTime:a.openTime||'07:00',cutoff:a.cutoff||'09:20',menu,teams:lines(a.teams),rounds:lines(a.rounds)});toast('บันทึกแล้ว ✅')}catch(e){toast('บันทึกไม่ได้ (ต้องมีสิทธิ์แก้ไข)')}}
+
+const RINFO={employee:['🍱','พนักงาน','สั่งข้าว และให้คะแนน/คอมเมนต์อาหาร'],rep:['👥','ตัวแทนทีม','ดูสรุปทีม สั่งแทนเพื่อน ตามคนที่ยังไม่สั่ง'],kitchen:['👩‍🍳','ครัว','ดูออเดอร์ทั้งหมด พิมพ์ใบสั่ง และตอบฟีดแบ็ก'],admin:['⚙️','แอดมิน','ตั้งค่าเมนู ทีม วันที่ สมาชิก และดูแดชบอร์ด']};
+function vLanding(){const al=allowed(),last=(()=>{try{return localStorage.getItem('active')}catch(e){return ''}})();
+ return '<div class="card"><h3>👋 ยินดีต้อนรับ</h3><label>ชื่อเล่นของคุณ</label><input value="'+esc(S.me.name)+'" oninput="S.me.name=this.value;saveMe()" placeholder="เช่น แนน"></div><div class="mut" style="margin:8px 2px">เลือกบทบาทที่จะเข้าใช้งาน</div>'+
+ ['employee','rep','kitchen','admin'].map(r=>{const ok=al.includes(r),i=RINFO[r];
+  return '<div class="card" style="'+(ok?'':'opacity:.75')+'"><div style="display:flex;gap:12px;align-items:center"><div style="font-size:30px">'+i[0]+'</div><div style="flex:1"><b>'+i[1]+'</b>'+(last===r&&ok?' <span class="chip">ใช้ล่าสุด</span>':'')+'<div class="mut">'+i[2]+'</div></div></div>'+
+  (ok?'<button class="btn" onclick="pickRole(\''+r+'\')">เข้าใช้งานเป็น'+i[1]+'</button>':
+   r==='admin'?'<div class="mut" style="margin-top:8px">🔒 ต้องได้รับสิทธิ์ Editor จากเจ้าของหน้านี้</div>':
+   S.myReq===r?'<div class="mut" style="margin-top:8px">⏳ ส่งคำขอแล้ว รอแอดมินอนุมัติ</div>':'<div class="mut" style="margin-top:8px">🔒 ยังไม่มีสิทธิ์</div><button class="btn s" style="margin-top:6px" onclick="reqRole(\''+r+'\')">ขอสิทธิ์จากแอดมิน</button>')+'</div>'}).join('')}
+function pickRole(r){if(!S.me.name.trim())return toast('กรอกชื่อเล่นก่อน');S.active=r;try{localStorage.setItem('active',r)}catch(e){}S.tab=r==='kitchen'?'kitchen':r==='admin'?'dash':'order';upsert();render(1)}
+function reqRole(r){if(!S.me.name.trim())return toast('กรอกชื่อเล่นก่อน');S.myReq=r;upsert();toast('ส่งคำขอแล้ว ✅');render(1)}
+const TABS=[['order','สั่งอาหาร',['employee','rep','kitchen','admin']],['team','ทีม',['rep','admin']],['kitchen','ครัว',['kitchen','admin']],['fb','ฟีดแบ็ก',['employee','rep','kitchen','admin']],['dash','แดชบอร์ด',['admin']],['admin','ตั้งค่า',['admin']]];
+function render(force){const a=document.activeElement;
+ if(!force&&a&&/INPUT|TEXTAREA|SELECT/.test(a.tagName)&&a.closest('#app')){S.pending=true;return}
+ S.pending=false;if(!S.active||!allowed().includes(S.active))S.active=null;if(!S.active){document.getElementById('app').innerHTML=(S.err?'<div class="bn c">'+esc(S.err)+'</div>':'')+vLanding();return}const ts=TABS.filter(t=>t[2].includes(role()));if(!ts.some(t=>t[0]===S.tab))S.tab=ts[0][0];
+ const v={order:vOrder,team:vTeam,kitchen:vKitchen,fb:vFb,dash:vDash,admin:vAdmin}[S.tab];
+ document.getElementById('app').innerHTML=(S.err?'<div class="bn c">'+esc(S.err)+'</div>':'')+
+ '<div class="mut noprint">'+esc(S.me.name||'')+' · บทบาท: <b>'+ROLE[role()]+'</b> <button class="lnk" style="color:var(--pri)" onclick="S.active=null;render(1)">เปลี่ยนบทบาท</button></div><div class="tabs noprint">'+ts.map(t=>'<button class="'+(S.tab===t[0]?'on':'')+'" onclick="S.tab=\''+t[0]+'\';render(1)">'+t[1]+'</button>').join('')+'</div>'+v()}
+document.addEventListener('focusout',()=>setTimeout(()=>{if(S.pending&&!/INPUT|TEXTAREA|SELECT/.test((document.activeElement||{}).tagName||''))render(1)},150));
+setInterval(()=>render(),30000);render(1);
+
+function subOrders(){const ds=days(),k=ds[0]+ds[4];if(!S.db||k===S.rk)return;S.rk=k;if(S.unsub)S.unsub();
+ S.unsub=S.db.collection('orders').where('date','>=',ds[0]).where('date','<=',ds[4]).onSnapshot(s=>{S.orders=s.docs.map(d=>Object.assign({id:d.id},d.data()));render()},e=>{S.err='โหลดออเดอร์ไม่ได้';render(1)})}
+(async()=>{
+ const to=setTimeout(()=>{if(!S.db){S.err='เชื่อมต่อฐานข้อมูลไม่ได้ — เปิดผ่านลิงก์ claude.ai และล็อกอินก่อน';render(1)}},10000);
+ try{const[db,user]=await Promise.all([claude.use('db'),claude.use('user')]);clearTimeout(to);
+  if(!db){S.err='ยังเชื่อมต่อฐานข้อมูลไม่ได้ — ต้องล็อกอิน claude.ai ก่อนใช้งาน';render(1);return}
+  S.db=db;if(user){try{S.uid=await user.id();S.admin=await user.canEdit();if(!S.me.name){const p=await user.me();if(p&&p.name){S.me.name=p.name;saveMe()}}}catch(e){}}
+  db.doc('config/main').onSnapshot(s=>{S.cfg=Object.assign({},DEF,s.exists?s.data():{});
+   if(!S.adm)S.adm={week:S.cfg.week,notice:S.cfg.notice,openTime:S.cfg.openTime,cutoff:S.cfg.cutoff,menu:S.cfg.menu.map(m=>m.name).join('\n'),teams:S.cfg.teams.join('\n'),rounds:S.cfg.rounds.join('\n')};
+   subOrders();render()},e=>{S.err='โหลดเมนูไม่ได้';render(1)});
+  subOrders();
+  db.collection('roles').onSnapshot(s=>{S.roles={};s.docs.forEach(d=>S.roles[d.id]=(d.data()||{}).role);render()},()=>{});
+  db.collection('members').onSnapshot(s=>{S.members=s.docs.map(d=>d.data());const m=S.members.find(x=>x.uid===S.uid);if(m)S.myReq=m.req||'';render()},()=>{});
+  db.collection('feedback').orderBy('ts','desc').limit(300).onSnapshot(s=>{S.fb=s.docs.map(d=>Object.assign({id:d.id},d.data()));render()},()=>{});
+  db.collection('replies').orderBy('ts','desc').limit(600).onSnapshot(s=>{S.replies=s.docs.map(d=>Object.assign({id:d.id},d.data()));render()},()=>{});
+  upsert();render(1);
+ }catch(e){clearTimeout(to);S.err='เริ่มระบบไม่สำเร็จ';render(1)}
+})();
+</script></body></html>
